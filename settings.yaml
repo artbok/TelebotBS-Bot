@@ -1,0 +1,28 @@
+userlist:
+- 1193654237
+- 5482685819
+adminlist: []
+user:
+  1193654237:
+    Name: Temjik
+    Username: Temj1k
+    Tag: '#8GVQPJV'
+    TimeForCL:
+    - '18:20'
+    - '20:00'
+    - '21:40'
+    - '22:20'
+    - 09:40
+    - '12:00'
+    - '12:20'
+    - '14:00'
+    - '15:40'
+    ClubTrophies: 0
+    Team: 1
+  5482685819:
+    Name: temjik2
+    Username: Temjik2
+    Tag: '#8GVQPJV'
+    TimeForCL: []
+    ClubTrophies: 0
+    Team: 1
