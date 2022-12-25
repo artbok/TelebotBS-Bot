@@ -8,7 +8,7 @@ import requests
 import json
 import random
 
-#ФУНКЦИИ, ОТВЕЧАЮЩИЕ ЗА ЧТЕНИЕ/СОХРАНЕНИЕ ФАЙЛОВ
+#Чтение/Сохранение файлов
 
 def openFile(path):
     with open(path, encoding="utf-8") as file:
@@ -18,8 +18,6 @@ def saveFile(path, data):
     with open(path, "w", encoding="utf-8") as f:
         yaml.dump(data, f, sort_keys=False, allow_unicode=True)
 
-#ПЕРЕМЕННЫЕ
-
 lang = openFile("storage\\lang.yaml") 
 settings = openFile("storage\\settings.yaml")
 teams = openFile("storage\\teams.yaml")
@@ -27,11 +25,15 @@ blacklist = openFile("storage\\blacklist.yaml")
 adminlist = openFile("storage\\adminlist.yaml")
 token = openFile("storage\\tokens.yaml")
 
-LoggerBot = telebot.TeleBot(settings["LoggerBotToken"], skip_pending=True)
-bot = telebot.TeleBot(settings["BotToken"], skip_pending=True)
+#Боты
 
-adminchat = settings["adminchat"]
-chat = settings["chat"]
+LoggerBot = telebot.TeleBot(token["LoggerBotToken"], skip_pending=True)
+bot = telebot.TeleBot(token["BotToken"], skip_pending=True)
+
+#Переменные
+
+adminchat = token["adminchat"]
+chat = token["chat"]
 CheckList = []
 GameIDs = set()
 timeTasks = {}
@@ -57,11 +59,10 @@ def checkChatID(id):
     bot.send_message(id, "Использовать команды можно только в ЛС с ботом(@AboBS_bot)")
     return False
 
-
 def getUserStats(tag, id):
     user: User = userRepository.get(id)
     url = "https://api.brawlstars.com/v1/players/%23" + tag
-    r = requests.get(url, headers={"Authorization": settings["AuthKey"]})
+    r = requests.get(url, headers={"Authorization": token["AuthKey"]})
     if r.status_code != 200:
         text = "Игрок под данным ID не найден. Проверьте правильность написания и повторите команду."
     else:
@@ -98,8 +99,7 @@ def getUserStats(tag, id):
         text = text[:len(text)-2] + "\n🔹 Всего 11-ых уровней: <b>" + str(brawlersAt11Lvl) + "</b>\n🔹 Всего 10-ых уровней: <b>" + str(brawlersAt10Lvl) + "</b>\n🔸 Бойцов на 26-29 ранге: <b>" + str(brawlersAt26Rank) + "</b>\n🔸 Бойцов на 30-35 ранге: <b>" + str(brawlersAt30Rank) + "</b>"
     return text
 
-
-def DayStart(day):
+def dayStart(day):
     text = "Всех приветвую, через 7 часов начнётся " + day + " день лиги клубов. Команды на первый день:"
     for i in teams.keys():
         text += "\nКоманда №" + str(i) + ": "
@@ -125,7 +125,7 @@ def DayStart(day):
     saveFile("storage\\settings.yaml", settings)
     saveFile("storage\\teams.yaml", teams)
 
-def CheckTable(day):
+def checkTable(day):
     text = "Через 10 минут начнётся " + day + " день клубной лиги! Рассписание игр на этот день: "
     for i in range(1, 11):
         text += "\nКоманда " + str(i) + " ("
@@ -147,7 +147,7 @@ def CheckTable(day):
     saveFile("storage\\settings.yaml", settings)    
     bot.send_message(chat, text + "\nЖелаю всем удачи!", parse_mode="HTML")
 
-def EndOfTheDay(day):
+def endOfTheDay(day):
     text = day + " день клубной лиги завершился! Наш клуб набрал: <b>" + str(settings["ClubTrophies"]) + " очков</b>. Рейтинг клуба по очкам: "
     leaderList = {}
     for i in range(1, 11):
@@ -173,7 +173,7 @@ def EndOfTheDay(day):
         position += 1
     botLogging("chat", "EndOfTheDay")
     bot.send_message(chat, text, parse_mode="HTML")
-def FindCommonTime(team, id):
+def findCommonTime(team, id):
     times = []
     players = []
     for id in teams[team]["users"]:
@@ -225,23 +225,23 @@ def check():
     date = datetime.now().strftime('%a/%H:%M')
     week = int(datetime.now().strftime('%W')) % 2
     if date == 'Wed/08:00' and week == 1:
-        DayStart("первый")
+        dayStart("первый")
     elif date == 'Fri/08:00' and week == 1:
-        DayStart("второй")
+        dayStart("второй")
     elif date == 'Sun/13:22' and week == 1:
-        DayStart("третий")
+        dayStart("третий")
     if date == 'Wed/16:50' and week == 1:
-         CheckTable("первый")
+        checkTable("первый")
     elif date == 'Fri/16:50' and week == 1:
-         CheckTable("второй")
+        checkTable("второй")
     elif date == 'Sun/16:50' and week == 1:
-         CheckTable("третий")
+        checkTable("третий")
     if date == 'Thu/17:05' and week == 1:
-        EndOfTheDay("Первый")
+        endOfTheDay("Первый")
     elif date == 'Sat/17:05' and week == 1:
-        EndOfTheDay("Второй")
+        endOfTheDay("Второй")
     elif date == 'Mon/17:05' and week == 0:
-        EndOfTheDay("Третий")      
+        endOfTheDay("Третий")      
     date = datetime.now().strftime('%H:%M')
     if date in timeTasks:
         for i in timeTasks[date]:
@@ -292,13 +292,16 @@ def dele(message):
         bot.delete_message(id, user.t_MessageID)
 @bot.message_handler(commands=["ds"])
 def DS(message):
-    DayStart("первый")
+    dayStart("первый")
+
 @bot.message_handler(commands=["ct"])
 def CT(message):
-    CheckTable("первый")
+    checkTable("первый")
+
 @bot.message_handler(commands=["ed"])
 def ED(message):
-    EndOfTheDay("Первый")
+    endOfTheDay("Первый")
+
 @bot.message_handler(commands=["start"])
 def startCMD(message):
     id = message.chat.id
