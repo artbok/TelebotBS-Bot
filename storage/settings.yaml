@@ -1,219 +1,263 @@
-ClubTrophies: 0
+ClubTrophies: 189
 userlist:
 - 587262745
-- 1293297080
 - 5398258926
 - 965991778
 - 944737635
 - 1351862795
-- 1838826885
-- 980860780
 - 1692914062
 - 885241590
 - 1776839854
 - 1723223576
-- 1334679542
 - 1627845759
 - 1120841593
 - 1199804150
-- 1349357882
-- 5162713409
 - 2116328571
-- 1483468372
 - 658551070
 - 1193654237
 - 784193884
 - 1790362763
+- 5202556843
+- 1349357882
+- 5133646963
+- 1230083523
+- 5282701558
+- 922572148
+- 2032965601
+- 5670080583
+- 489061592
 user:
   587262745:
     Tag: PG28CU9QR
     Nickname: 🔪MESSERN🔪
-    TimeForCL: []
-    Team: 1
+    Team: 9
     TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
-  1293297080:
-    Tag: V0J9V0P0
-    Nickname: DaRkDeMoN
-    TimeForCL: []
-    Team: 7
-    TimeZoneDifference: 4
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230129T160148.000Z
   5398258926:
     Tag: 2JVROG2QJ
     Nickname: леон
-    TimeForCL: []
     Team: 3
     TimeZoneDifference: 2
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T172552.000Z
   965991778:
     Tag: CR89LJQC
     Nickname: ʳᵘˢĐø₲₲ɏ♡
-    Team: 7
+    Team: 6
     TimeZoneDifference: 0
-    TimeForCL: []
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T085624.000Z
   944737635:
     Tag: 89RV0LUGO
     Nickname: .thaise♡✌🏿|BS
-    TimeForCL: []
-    Team: 5
+    Team: 4
     TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 9
+    WeeklyTrophies: 9
+    TotalTrophies: 9
+    LastCheckedGame: 20230201T181742.000Z
   1351862795:
     Tag: VV8UY09R
     Nickname: ⛈️Đ₳Ɽ₭ ₲ⱧØ₴₮🥀
-    TimeForCL: []
-    Team: 8
-    TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
-  1838826885:
-    Tag: 89GQRL9PU
-    Nickname: sanya
-    TimeForCL: []
-    Team: 4
-    TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
-  980860780:
-    Tag: 20VVLYQ0U
-    Nickname: KilMiX
-    TimeForCL: []
-    Team: 4
-    TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    Team: 6
+    TimeZoneDifference: 2
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T111740.000Z
   1692914062:
     Tag: PQQ28YRYC
     Nickname: snyusoed
-    TimeForCL: []
-    Team: 1
+    Team: 9
     TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T102023.000Z
   885241590:
     Tag: 9JYYULPYG
     Nickname: Вадим Курседов
-    TimeForCL: []
-    Team: 7
+    Team: 6
     TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T142609.000Z
   1776839854:
     Tag: 8UYGUUJVG
     Nickname: ▪️♧@[$niper]♧▪️
-    TimeForCL: []
-    Team: 5
+    Team: 4
     TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 9
+    WeeklyTrophies: 9
+    TotalTrophies: 9
+    LastCheckedGame: 20230201T181742.000Z
   1723223576:
     Tag: 28PRV8UVY
     Nickname: _]LP[mr макс06_
-    TimeForCL: []
-    Team: 5
+    Team: 4
     TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
-  1334679542:
-    Tag: P8GL2QCPG
-    Nickname: бегающий гвоздь
-    TimeForCL: []
-    Team: 1
-    TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 9
+    WeeklyTrophies: 9
+    TotalTrophies: 9
+    LastCheckedGame: 20230201T181742.000Z
   1627845759:
     Tag: 8092892L2
     Nickname: _Prosto_Angel_
-    TimeForCL: []
-    Team: 6
+    Team: 5
     TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T165305.000Z
   1120841593:
     Tag: V9VQVLC
     Nickname: SMK|SoBoring
-    TimeForCL: []
-    Team: 8
+    Team: 1
     TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T165815.000Z
   1199804150:
     Tag: P0Q88UL90
     Nickname: ♡︎ᴛᴏᴍ ʜᴀʀᴅʏ•
-    TimeForCL: []
-    Team: 6
-    TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
-  1349357882:
-    Tag: Y998R89UV
-    Nickname: MrGloss15
-    TimeForCL: []
-    Team: 4
-    TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
-  5162713409:
-    Tag: VCVJPLYC
-    Nickname: HAPS
-    TimeForCL: []
-    Team: 3
-    TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    Team: 5
+    TimeZoneDifference: 2
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T165305.000Z
   2116328571:
     Tag: 8LYYRRR0
     Nickname: GCG|Trejх🏯
-    Team: 6
+    Team: 5
     TimeZoneDifference: 1
-    TimeForCL: []
-    WeekTropheys: 0
-    TotalTropheys: 0
-  1483468372:
-    Tag: 89JOJUQQL
-    Nickname: '.: Star_E :.'
-    TimeForCL: []
-    Team: 2
-    TimeZoneDifference: 0
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T165305.000Z
   658551070:
     Tag: J9LRJU28
     Nickname: Bad Boy
     Team: 2
-    TimeForCL: []
-    WeekTropheys: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
     TimeZoneDifference: 0
-    TotalTropheys: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T174941.000Z
   784193884:
     Tag: 29R9PYUC8
     Nickname: ☢️СМЭРТЬ☢️
-    Team: 8
+    Team: 2
     TimeZoneDifference: 0
-    TimeForCL: []
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T132259.000Z
   1193654237:
     Tag: QQGPVJRP
     Nickname: ㄒ乇爪ﾌ丨Ҝ
     Team: 3
     TimeZoneDifference: 0
-    TimeForCL: []
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T172552.000Z
   1790362763:
     Tag: YYLLRV280
     Nickname: марат
     Team: 2
     TimeZoneDifference: 0
-    TimeForCL: []
-    WeekTropheys: 0
-    TotalTropheys: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T113941.000Z
+  5202556843:
+    Tag: 9PJUR2QQP
+    Nickname: DOШIK|YT
+    Team: 3
+    TimeZoneDifference: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T172552.000Z
+  1349357882:
+    Tag: Y998R89UV
+    Nickname: MrGloss15
+    Team: 7
+    TimeZoneDifference: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T181016.000Z
+  922572148:
+    Tag: 9J0L0RRQG
+    Nickname: Tilays🃏🌆
+    Team: 7
+    TimeZoneDifference: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T180850.000Z
+  5133646963:
+    Tag: 8J8JUQ8GC
+    Nickname: Рокдок
+    Team: 8
+    TimeZoneDifference: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230131T185113.000Z
+  1230083523:
+    Tag: 880VJ9QR9
+    Nickname: ꜰᴇʟᴅʏ🎺
+    Team: 8
+    TimeZoneDifference: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T172319.000Z
+  5282701558:
+    Tag: Q0R0UQUJ
+    Nickname: ЧИТЕР777
+    Team: 8
+    TimeZoneDifference: -1
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: 20230201T174614.000Z
+  2032965601:
+    Tag: 20PYYL2PP
+    Nickname: SMK | spoilEel
+    Team: 1
+    TimeZoneDifference: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T165815.000Z
+  5670080583:
+    Tag: P09Y098P0
+    Nickname: SMK|mopik gopik
+    Team: 1
+    TimeZoneDifference: 0
+    DailyTrophies: 18
+    WeeklyTrophies: 18
+    TotalTrophies: 18
+    LastCheckedGame: 20230201T165815.000Z
+  489061592:
+    Tag: 2Q20VQP2
+    Nickname: yёёtCC
+    Team: 0
+    TimeZoneDifference: 0
+    DailyTrophies: 0
+    WeeklyTrophies: 0
+    TotalTrophies: 0
+    LastCheckedGame: Netu
