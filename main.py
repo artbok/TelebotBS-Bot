@@ -1,6 +1,7 @@
 import telebot
 from telebot import types
-from User import UserRepository, User
+from User import UserRepository, Member, Guest
+from Team import TeamRepository, Team
 from datetime import datetime
 from threading import Timer 
 import yaml 
@@ -51,80 +52,66 @@ GameIDs = set()
 timeTasks = {}
 suggestionsToPlay = {}
 battleDay = False
-userRepository = UserRepository().load(settings) #прогрузка профилей каждого члена клуба
+userRepository = UserRepository().loadProfiles(settings, adminlist) #прогрузка профилей каждого члена клуба
+teamRepository = TeamRepository().loadTeams(teams)
 
 #ФУНКЦИЯ ЛОГИРОВАНИЯ
 
 def botLogging(id, action):
-    if id is int and id > 0: 
-        if id in settings['userlist']: log = "<b>" + datetime.now().strftime("%H:%M:%S") + " | 🤖 --> 👤 </b>(<code>"+ str(id) + "</code>) | " + action
-        else: settings['userlist']: log = "<b>" + datetime.now().strftime("%H:%M:%S") + " | 🤖 --> 👤</b> <code>"+ str(id) + "</code> | " + action
-    else: log = "<b>" + datetime.now().strftime("%H:%M:%S") + " | 🤖 --> 👤 </b> <code>" + str(id) + "</code> | " + action
+    if type(id) is int: 
+        if id in settings['userlist']: log = "<b>" + datetime.now().strftime("%H:%M:%S") + " | 🤖 --> 👤" + settings['user'][id]["Nickname"] + " </b>(<code>"+ str(id) + "</code>) | " + action
+        else: log = "<b>" + datetime.now().strftime("%H:%M:%S") + " | 🤖 --> 👤</b><code>"+ str(id) + "</code> | " + action
+    else: log = "<b>" + datetime.now().strftime("%H:%M:%S") + " | 🤖 --> " + id + "</b>  | " + action
     LoggerBot.send_message(1193654237, log, parse_mode="HTML")
 
+def userLogging(id, text):
+    if type(id) is int: 
+        if id in settings['userlist']: log = "<b>" + datetime.now().strftime("%H:%M:%S") + " | 👤" + settings['user'][id]["Nickname"] + " (<code>"+ str(id) + "</code>) --> 🤖 | </b>" + text
+        else: log = "<b>" + datetime.now().strftime("%H:%M:%S") + " | 👤<code>"+ str(id) + "</code> --> 🤖 | " + text + "</b>"
+        LoggerBot.send_message(1193654237, log, parse_mode="HTML")
 
 #ФУНКЦИИ ЗАПУСКОВ ВРЕМЕННЫХ СОБЫТИЙ
 
 def dayStart(day):
-    loadGames(); teamlists = ""
-    for i in teams.keys():
-        if teams[i]["users"][0] != teams[i]["users"][1] and teams[i]["users"][0] != teams[i]["users"][2]: 
-            teamlists += "\nКоманда №" + str(i) + ": "
-            for id in teams[i]["users"]:
-                if id != "Не назначено":
-                    if day == "Wed" or day == "Fri": CheckList.append([id, 2])
-                    else: CheckList.append([id, 3])
-                    user: User = userRepository.get(id)
-                    user.t_Dict = {**{str(i): [["", "00"], ["", "20"], ["", "40"]] for i in range(17, 24)}, **{str(j): [["", "00"], ["", "20"], ["", "40"]] for j in range(8, 17)}}
-                    user.t_MessageID = bot.send_message(id, message['DayStartPersonal'], reply_markup=genMarkup(id)).message_id
-                    print(user.t_MessageID)
-                    teamlists += "\n   - <a href='tg://user?id=" + str(id) + "'>" + user.nickname + "</a>"
-    bot.send_message(chat, message['DayStartChat'].format(teams=teamlists), parse_mode="HTML")
-    botLogging("chat", "DayStart_func"); saveFile("settings.yaml", settings); saveFile("teams.yaml", teams)
+    loadGames(); teamlists = ""; n = 3 if day == "Sun" else 2
+    for i in teamRepository.teamDict.keys():
+        teamlists += "\nКоманда №" + str(i) + ": "
+        team: Team = teamRepository.get(i)
+        for id in team.members:
+            CheckList.append([id, n])
+            user: Member = userRepository.get(id)
+            user.t_Dict = {**{str(i): [["", "00"], ["", "20"], ["", "40"]] for i in range(17, 24)}, **{str(j): [["", "00"], ["", "20"], ["", "40"]] for j in range(8, 17)}}
+            user.t_MessageID = bot.send_message(id, message['DayStartPersonal'], reply_markup=genMarkup(id)).message_id
+            teamlists += "\n   - <a href='tg://user?id=" + str(id) + "'>" + user.nickname + "</a>"
+    bot.pin_chat_message(chat, bot.send_message(chat, message['DayStartChat'].format(teams=teamlists), parse_mode="HTML").message_id); botLogging("chat", "DayStart_func")
 
 
 def checkTable():
-    global battleDay
-    battleDay = True
-    for i in teams.keys():
-        for id in teams[i]["users"]:
-            if id != "Не назначено":
-                user: User = userRepository.get(id)
-                user.t_Dict = {}
-                if teams[i]["time"] == "Не назначено" and user.t_GameByInvitation is False:
-                    user.t_GameByInvitation = True
-                    bot.send_message(adminchat, message["NotAnsweredReport"].format(id=id, nickname=user.nickname), parse_mode="HTML")
-                    bot.send_message(id, message["NotAnswered"], reply_markup=setKeyboard(id))
-                    bot.edit_message_text(chat_id=id, message_id=user.t_MessageID, text=message["DelTable"])
-    botLogging("chat", "CheckTable_func"); saveFile("settings.yaml", settings)    
-
+    global battleDay; battleDay = True
+    for i in teamRepository.teamDict.keys():
+        team: Team = teamRepository.get(i)
+        for id in team.t_NotAnsweredUsers:
+            user: Member = userRepository.get(id)
+            user.t_Dict, user.t_MessageID, user.t_Counter = {}, None, 0                                                    #ДЛЯ ВСТАВКИ В SAVE_BUTTON
+            bot.send_message(adminchat, message["NotAnsweredReport"].format(id=id, nickname=user.nickname), parse_mode="HTML")
+            bot.send_message(id, message["NotAnsweredPersonal"], reply_markup=setKeyboard(id))
+            bot.edit_message_text(chat_id=id, message_id=user.t_MessageID, text=message["DelTable"])
+    botLogging("chat", "CheckTable_func")
 
 def endOfTheDay():
-    global battleDay
-    battleDay = False
-    raiting = ""
-    leaderList = {}
-    for i in range(1, 11):
-        teams[i]['time'] = 'Не назначено'
-        for id in teams[i]["users"]:
-            if id != "Не назначено":
-                user: User = userRepository.get(id)
-                user.times = []
-                if settings['user'][id]['WeeklyTrophies'] not in leaderList:
-                    leaderList[settings['user'][id]['WeeklyTrophies']] = [settings['user'][id]['Nickname']]
-                else:
-                    leaderList[settings['user'][id]['WeeklyTrophies']].append(settings['user'][id]['Nickname'])
-    saveFile("settings.yaml", settings)   
-    saveFile("teams.yaml", teams)   
-    sorted(leaderList.keys(), reverse=True)
-    position = 1
+    global battleDay; battleDay = False; raiting = ""; leaderList = {}; position = 1
+    for i in teamRepository.teamDict.keys():
+        team: Team = teamRepository.get(i)
+        team.t_GameByInvitation, team.t_SelectedTimes, team.t_TimeToPlay, team.t_NotAnsweredUsers = False, set(), None, []
+        for id in team.members:
+            if settings['user'][id]['WeeklyTrophies'] not in leaderList: leaderList[settings['user'][id]['WeeklyTrophies']] = [settings['user'][id]['Nickname']]
+            else: leaderList[settings['user'][id]['WeeklyTrophies']].append(settings['user'][id]['Nickname'])
     for i in sorted(leaderList.keys(), reverse=True):
         raiting += "\n<b>" + str(position) + " место (" + str(i) + " очков)</b>: "
-        for j in leaderList[i]:
-            raiting += j + ", "
+        for j in leaderList[i]: raiting += j + ", "
         raiting = raiting[:len(raiting)-2]; position += 1
-    botLogging("chat", "EndOfTheDay_func")
     bot.send_message(chat, message["EndOfTheDayChat"].format(points=settings["ClubTrophies"], leaderList=raiting), parse_mode="HTML")
+    botLogging("chat", "EndOfTheDay_func"); saveFile("settings.yaml", settings)
 
 #ОТСЛЕЖИВАНИЕ БОЁВ
 
@@ -173,10 +160,10 @@ def loadGames():
 #ЦИКЛИЧНАЯ ГЛАВНАЯ ФУНКЦИЯ
 
 def check():
-    Timer(60, check).start()
+    Timer(60-datetime.now().second, check).start()
     date = datetime.now().strftime('%a/%H:%M')
     week = int(datetime.now().strftime('%W')) % 2
-    #if (date == 'Wed/08:00' or date == 'Fri/08:00' or date == 'Sun/08:00') and week == 1: dayStart(date[:3])
+    if (date == 'Wed/08:00' or date == 'Fri/08:00' or date == 'Sun/08:00') and week == 1: dayStart(date[:3])
     if (date == 'Wed/16:50' or date == 'Fri/16:50' or date == 'Sun/16:50') and week == 1: checkTable()
     elif (date == 'Thu/17:05' and week == 1) or (date == 'Sat/17:05' and week == 1) or (date == 'Mon/17:05' and week == 0): endOfTheDay()    
     date = datetime.now().strftime('%H:%M')
@@ -201,20 +188,18 @@ def permission(id):
     if id == 1193654237: return "Owner"
     elif id in adminlist: return "Admin"
     elif id in settings['userlist']: return "Member"
-    else: return "User"
+    else: return "Guest"
 
 #УСТАНОВКА КЛАВИАТУРЫ
 
 def setKeyboard(id):
     kb = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, row_width=2)
     role = permission(id)
-    if role != "User" and userRepository.get(id).t_GameByInvitation is True: kb.add(types.KeyboardButton("Предложить сыграть КЛ⚔️"))
-    if role == "Owner":
-        kb.add(types.KeyboardButton("Информация об игроке👤"), types.KeyboardButton("Установить часовую разницу🌍"), types.KeyboardButton("Редактировать команды✏️"), types.KeyboardButton("DayStart_func"), types.KeyboardButton("CheckTable_func"), types.KeyboardButton("EndOfTheDay_func"))
-    elif role == "Admin":
-        kb.add(types.KeyboardButton("Информация об игроке👤"), types.KeyboardButton("Установить часовую разницу🌍"), types.KeyboardButton("Редактировать команды✏️"))
-    elif role == "Member":
-        kb.add(types.KeyboardButton("Информация об игроке👤"), types.KeyboardButton("Установить часовую разницу🌍"))
+    team: Team = teamRepository.get(userRepository.get(id).team)
+    if role != "Guest" and userRepository.get(id).t_GameByInvitation is True: kb.add(types.KeyboardButton("Предложить сыграть КЛ⚔️"))
+    if role == "Owner": kb.add(types.KeyboardButton("Информация об игроке👤"), types.KeyboardButton("Установить часовую разницу🌍"), types.KeyboardButton("Редактировать команды✏️"), types.KeyboardButton("DayStart_func"), types.KeyboardButton("CheckTable_func"), types.KeyboardButton("EndOfTheDay_func"))
+    elif role == "Admin": kb.add(types.KeyboardButton("Информация об игроке👤"), types.KeyboardButton("Установить часовую разницу🌍"), types.KeyboardButton("Редактировать команды✏️"))
+    elif role == "Member": kb.add(types.KeyboardButton("Информация об игроке👤"), types.KeyboardButton("Установить часовую разницу🌍"))
     else:
         if id not in blacklist: kb.add(types.KeyboardButton("Информация об игроке👤"), types.KeyboardButton("Вступить в клуб✉️"))
         else: kb.add(types.KeyboardButton("Информация об игроке👤"))
@@ -225,6 +210,7 @@ def setKeyboard(id):
 @bot.message_handler(commands=["start"])
 def startCMD(message):
     id = message.chat.id
+    print(id)
     #userLogging(id, message.from_user.first_name, message.text)
     if id > 0:
         botLogging(id, "StartCMD")
@@ -233,18 +219,17 @@ def startCMD(message):
 
 #ПОЛУЧЕНИЕ ИНФОРМАЦИИ ОБ ИГРОКЕ
 
-def delHTML(text):
-        text = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
-        return text
+def delHTML(text): return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+
 
 def playerInfo(id):
-    user: User = userRepository.get(id)
+    user: Guest = userRepository.get(id)
     user.i_Status = True
+    bot.send_message(id, "Отправьте вашу ссылку на добавление в друзья или тэг игрока, про которого вы хотите получить информацию.")
     botLogging(id, "WaitingForTheTag")
-    bot.send_message(id, "Отправьте ID игрока, которого вы хотите проверить.")
 
 def getUserStats(tag, id):
-    user: User = userRepository.get(id)
+    user: Guest = userRepository.get(id)
     url = "https://api.brawlstars.com/v1/players/%23" + tag
     r = requests.get(url, headers={"Authorization": token["AuthKey"]})
     if r.status_code != 200: text = "Игрок под данным ID не найден. Проверьте правильность написания ID и "
@@ -272,8 +257,16 @@ def getUserStats(tag, id):
         text = text[:len(text)-2] + "\n🔹 Всего 11-ых уровней: <b>" + str(brawlersAt11Lvl) + "</b>\n🔹 Всего 10-ых уровней: <b>" + str(brawlersAt10Lvl) + "</b>\n🔸 Бойцов на 26-29 ранге: <b>" + str(brawlersAt26Rank) + "</b>\n🔸 Бойцов на 30-35 ранге: <b>" + str(brawlersAt30Rank) + "</b>"
     return text
 
+def tagProcessing(text, id):
+    if len(text) > 40:
+        if text.count("=") == 2 and text.count("&") == 1: 
+            sendTag(text[text.find("=")+1:text.find("&")], id)
+            print(text[text.find("=")+1:text.find("&")])
+        else: bot.send_message(id, "⚠️Введена некорректная ссылка!⚠️ \n Отправь мне либо ссылку на добавление в друзья, либо тэг игрока о котором ты хочешь получить информацию")
+    else: sendTag(text.upper()[1:] if text[0] == "#" else text.upper(), id)
+
 def sendTag(tag, id):
-    user: User = userRepository.get(id)
+    user: Guest = userRepository.get(id)
     if user.j_Status is True:
         user.j_Tag = tag
         text = getUserStats(tag, id)
@@ -289,14 +282,14 @@ def sendTag(tag, id):
             user.j_Status = False
             botLogging(id, "Send Application to adminchat")
         else:
-            botLogging(id, "Invalid tag")
             bot.send_message(id, text + "отправьте его заново")
+            botLogging(id, "Invalid tag")
     elif user.i_Status is True:
         text = getUserStats(tag, user)
         user.i_Status = False
         if text[0] != "И":
-            botLogging(id, "Send info about player")
             bot.send_message(id, "<b>Информация об этом игроке:</b> \n" + text, parse_mode="HTML", reply_markup=setKeyboard(id))
+            botLogging(id, "Send info about player")
         else:
             bot.send_message(id, text + "повторите команду", reply_markup=setKeyboard(id))
             botLogging(id, "Invalid tag")
@@ -675,7 +668,7 @@ def delTable(message):
     for i in teams.keys():
         for j in teams[i]['users']:
             if j != "Не назначено": 
-                user: User = userRepository.get(j)
+                user: Member = userRepository.get(j)
                 bot.delete_message(j, user.t_MessageID)   
                      
 #ХЭНДЛЕРЫ сообщений и кликов
@@ -684,20 +677,23 @@ def delTable(message):
 def handleText(message):
     id = message.chat.id
     role = permission(id)
-    user: User = userRepository.get(id)
+    user: Guest = userRepository.get(id)
     text = message.text
     if id > 0:
-        LoggerBot.send_message(1193654237,  "<a href='tg://user?id=" + str(id) + "'>👤 " + str(id) + "</a> | " + datetime.now().strftime("%H:%M:%S") + " | " +  text, parse_mode="HTML")
+        userLogging(id, text)
         if user.i_Status is False and text == "Информация об игроке👤": playerInfo(id) 
-        elif user.j_Status is False and text == "Вступить в клуб✉️" and role == "User": join(id) 
+        elif user.j_Status is False and text == "Вступить в клуб✉️" and role == "Guest": join(id) 
         elif text == "Редактировать команды✏️" and (role == "Admin" or role == "Owner"): editTeams(id)
-        elif text == "Установить часовую разницу🌍" and role != "User": selectHourDifference(id)
-        elif text == "Предложить сыграть КЛ⚔️" and role != "User": suggestToPlay(user.team, id)
+        elif text == "Установить часовую разницу🌍" and role != "Guest": selectHourDifference(id)
+        elif text == "Предложить сыграть КЛ⚔️" and role != "Guest": suggestToPlay(user.team, id)
         elif text == "DayStart_func" and role == "Owner": dayStart("Wed")
         elif text == "CheckTable_func" and role == "Owner": checkTable()
         elif text == "EndOfTheDay_func" and role == "Owner": endOfTheDay()
-        elif user.i_Status is True or user.j_Status is True: sendTag((text.upper()[1:] if text[0] == "#" else text.upper()), id)
+        elif user.i_Status is True or user.j_Status is True: tagProcessing(text, id)
 
+@bot.chat_member_handler()
+def f(g):
+    print(g)
 @bot.callback_query_handler(func=lambda call: True)
 def handleCallbacks(call):
     calltype = call.data[0]
@@ -713,6 +709,6 @@ def handleCallbacks(call):
     elif calltype == "7": changeResult(call.message.chat.id, data, call.message.message_id)
     elif calltype == "8": noFreeTimeButton(call.message.chat.id)
     elif calltype == "9": clickToSuggest(call.message.chat.id, data)
-check()
+#check()
 botLogging("Program", "Bot launched in " + ("<b>TestMode</b>"if len(folder) == 9 else "<b>MainMode</b>"))
 bot.infinity_polling(skip_pending=True)
